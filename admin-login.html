@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Administrador - ISTAE</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link rel="stylesheet" href="styles.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .login-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 450px;
+            overflow: hidden;
+        }
+        
+        .login-header {
+            background-color: #1b5e20;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .login-header .logo-circle {
+            width: 80px;
+            height: 80px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+        }
+        
+        .login-header .logo-circle span {
+            color: #2e7d32;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .login-header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        
+        .login-header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .login-form {
+            padding: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .input-with-icon {
+            position: relative;
+        }
+        
+        .input-with-icon i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+        }
+        
+        .input-with-icon input {
+            padding-left: 45px;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus {
+            border-color: #2e7d32;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.2);
+        }
+        
+        .btn {
+            background-color: #2e7d32;
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #1b5e20;
+        }
+        
+        .message {
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            display: none;
+            text-align: center;
+        }
+        
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .login-footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #f9f9f9;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-top: 15px;
+            color: #2e7d32;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <div class="logo-circle">
+                <img src="imagen/logo.png" alt="Logo ISTAE">
+            </div>
+            <h1>Acceso de Administrador</h1>
+            <p>Ingrese sus credenciales para acceder al panel</p>
+        </div>
+        
+        <div class="login-form">
+            <div id="loginMessage" class="message error"></div>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Usuario:</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="username" placeholder="Ingrese su usuario" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Contraseña:</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="password" placeholder="Ingrese su contraseña" required>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn">Iniciar Sesión</button>
+                
+                <a href="index.html" class="back-link">
+                    <i class="fas fa-arrow-left"></i> Volver a la aplicación
+                </a>
+            </form>
+        </div>
+        
+        <div class="login-footer">
+            <p>Instituto Superior Tecnológico Alberto Enríquez &copy; 2025</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const messageElement = document.getElementById('loginMessage');
+            
+            // Credenciales específicas para ISTAE
+            if (username === 'ISTAE-2025' && password === '2025-cultivos-ISTAE') {
+                messageElement.textContent = 'Inicio de sesión exitoso. Redirigiendo...';
+                messageElement.className = 'message success';
+                messageElement.style.display = 'block';
+                
+                // Guardar estado de sesión
+                localStorage.setItem('adminLoggedIn', 'true');
+                
+                // Redirigir al panel de administración después de un breve delay
+                setTimeout(function() {
+                    window.location.href = 'admin.html';
+                }, 1500);
+            } else {
+                messageElement.textContent = 'Usuario o contraseña incorrectos';
+                messageElement.className = 'message error';
+                messageElement.style.display = 'block';
+                
+                // Efecto de sacudida en los inputs
+                document.getElementById('username').style.animation = 'shake 0.5s';
+                document.getElementById('password').style.animation = 'shake 0.5s';
+                
+                setTimeout(function() {
+                    document.getElementById('username').style.animation = '';
+                    document.getElementById('password').style.animation = '';
+                }, 500);
+            }
+        });
+        
+        // Verificar si ya está logueado
+        if (localStorage.getItem('adminLoggedIn') === 'true') {
+            window.location.href = 'admin.html';
+        }
+    </script>
+</body>
+</html>

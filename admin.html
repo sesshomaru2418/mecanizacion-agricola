@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración - ISTAE</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2e7d32;
+            --secondary-color: #4caf50;
+            --accent-color: #ff9800;
+            --light-color: #f5f5f5;
+            --dark-color: #333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.5;
+            font-size: 16px;
+        }
+
+        .container {
+            max-width: 100%;
+            padding: 15px;
+        }
+
+        /* HEADER */
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 16px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-circle {
+            width: 40px;
+            height: 40px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-circle span {
+            color: var(--primary-color);
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .logo h1 {
+            font-size: 1.2rem;
+        }
+
+        .logout-btn {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .logout-btn:hover {
+            background-color: #d32f2f;
+        }
+
+        /* NAV */
+        .admin-nav {
+            background-color: var(--secondary-color);
+            overflow-x: auto;
+        }
+
+        .admin-nav ul {
+            display: flex;
+            list-style: none;
+            padding: 8px;
+            margin: 0;
+            gap: 8px;
+        }
+
+        .admin-nav a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            white-space: nowrap;
+            font-size: 0.9rem;
+            transition: 0.3s;
+        }
+
+        .admin-nav a:hover, .admin-nav a.active {
+            background-color: rgba(255, 255, 255, 0.25);
+        }
+
+        /* PANELS */
+        .admin-panel {
+            display: none;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .admin-panel.active {
+            display: block;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 6px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.95rem;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .image-preview {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            display: block;
+            margin-top: 5px;
+        }
+
+        /* BUTTONS */
+        .btn, .add-btn, .remove-btn {
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px;
+            font-size: 1rem;
+        }
+
+        .btn:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .add-btn {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 10px 15px;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+        .remove-btn {
+            background-color: #f44336;
+            color: white;
+            padding: 8px;
+            width: 36px;
+            font-size: 1rem;
+        }
+
+        /* CARDS */
+        .card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            padding: 15px;
+            margin: 10px 0;
+        }
+
+        .card h3 {
+            color: var(--primary-color);
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        /* GRID */
+        .tools-grid, .quiz-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 12px;
+        }
+
+        .tool-card, .quiz-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: transform 0.2s;
+        }
+
+        .tool-card:hover, .quiz-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .tool-card img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+        }
+
+        .tool-card-content, .quiz-card-content {
+            padding: 10px;
+        }
+
+        .tool-card h3, .quiz-card h3 {
+            font-size: 1rem;
+            color: var(--primary-color);
+        }
+
+        /* MESSAGES */
+        .message {
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        /* DYNAMIC ITEMS */
+        .characteristic-item, .option-item {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        .characteristic-item input, .option-item input {
+            flex: 1;
+        }
+
+        .correct-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            white-space: nowrap;
+        }
+
+        .correct-checkbox input {
+            width: auto;
+        }
+
+        /* STORAGE INFO */
+        .storage-info {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .storage-info p {
+            margin-bottom: 10px;
+        }
+
+        .storage-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .storage-warning {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-top: 15px;
+        }
+
+        .image-info {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* PROGRESS BAR */
+        .progress-container {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background-color: var(--primary-color);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* MOBILE OPTIMIZATION */
+        @media (max-width: 600px) {
+            .logo h1 {
+                font-size: 1rem;
+            }
+
+            .tools-grid, .quiz-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+
+            .logout-btn {
+                align-self: flex-end;
+            }
+
+            .option-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+
+            .correct-checkbox {
+                align-self: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-circle">
+                    <span>ISTAE</span>
+                </div>
+                <h1>Panel de Administración - Mecanización Agrícola</h1>
+            </div>
+            <button class="logout-btn" id="logoutBtn">Cerrar Sesión</button>
+        </div>
+    </header>
+    
+    <nav class="admin-nav">
+        <ul>
+            <li><a href="#" class="nav-link active" data-target="add-tool">Agregar Herramienta</a></li>
+            <li><a href="#" class="nav-link" data-target="add-quiz">Agregar Evaluación</a></li>
+            <li><a href="#" class="nav-link" data-target="manage-tools">Gestionar Herramientas</a></li>
+            <li><a href="#" class="nav-link" data-target="manage-quiz">Gestionar Evaluaciones</a></li>
+            <li><a href="#" class="nav-link" data-target="storage-info">Información de Almacenamiento</a></li>
+        </ul>
+    </nav>
+    
+    <div class="container">
+        <!-- Panel para agregar nueva herramienta -->
+        <div class="admin-panel active" id="add-tool">
+            <h2>Agregar Nueva Herramienta</h2>
+            <div id="toolMessage" class="message"></div>
+            
+            <form id="toolForm">
+                <div class="form-group">
+                    <label for="toolName">Nombre de la Herramienta:</label>
+                    <input type="text" id="toolName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="toolId">ID de la Herramienta (sin espacios, en minúsculas):</label>
+                    <input type="text" id="toolId" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="toolImage">Imagen de la Herramienta:</label>
+                    <input type="file" id="toolImage" accept="image/*" required>
+                    <div class="image-info">
+                        <i class="fas fa-info-circle"></i> Tamaño máximo: 500KB. Formatos: JPG, PNG, GIF.
+                    </div>
+                    <img id="toolImagePreview" class="image-preview" src="#" alt="Vista previa">
+                    <div id="imageSizeMessage" class="message" style="display:none;"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="toolDescription">Descripción:</label>
+                    <textarea id="toolDescription" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Características Técnicas:</label>
+                    <div id="characteristicsContainer">
+                        <div class="characteristic-item">
+                            <input type="text" placeholder="Característica" class="characteristic-input">
+                            <button type="button" class="remove-btn">-</button>
+                        </div>
+                    </div>
+                    <button type="button" class="add-btn" id="addCharacteristicBtn">+ Agregar Característica</button>
+                </div>
+                
+                <div class="form-group">
+                    <label for="toolUses">Usos Principales:</label>
+                    <textarea id="toolUses" required></textarea>
+                </div>
+                
+                <button type="submit" class="btn">Guardar Herramienta</button>
+            </form>
+        </div>
+        
+        <!-- Panel para agregar evaluaciones -->
+        <div class="admin-panel" id="add-quiz">
+            <h2>Agregar Nueva Evaluación</h2>
+            <div id="quizMessage" class="message"></div>
+            
+            <form id="quizForm">
+                <div class="form-group">
+                    <label for="quizQuestion">Pregunta:</label>
+                    <textarea id="quizQuestion" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Opciones de Respuesta:</label>
+                    <div id="optionsContainer">
+                        <div class="option-item">
+                            <input type="text" placeholder="Opción de respuesta" class="option-input">
+                            <div class="correct-checkbox">
+                                <input type="checkbox" class="correct-option">
+                                <label>Correcta</label>
+                            </div>
+                            <button type="button" class="remove-btn">-</button>
+                        </div>
+                        <div class="option-item">
+                            <input type="text" placeholder="Opción de respuesta" class="option-input">
+                            <div class="correct-checkbox">
+                                <input type="checkbox" class="correct-option">
+                                <label>Correcta</label>
+                            </div>
+                            <button type="button" class="remove-btn">-</button>
+                        </div>
+                    </div>
+                    <button type="button" class="add-btn" id="addOptionBtn">+ Agregar Opción</button>
+                </div>
+                
+                <button type="submit" class="btn">Guardar Evaluación</button>
+            </form>
+        </div>
+        
+        <!-- Panel para gestionar herramientas -->
+        <div class="admin-panel" id="manage-tools">
+            <h2>Herramientas Agregadas</h2>
+            <div id="toolsList" class="tools-grid">
+                <!-- Las herramientas se cargarán con JavaScript -->
+            </div>
+        </div>
+        
+        <!-- Panel para gestionar evaluaciones -->
+        <div class="admin-panel" id="manage-quiz">
+            <h2>Evaluaciones Registradas</h2>
+            <div id="quizList" class="quiz-grid">
+                <!-- Las evaluaciones se cargarán con JavaScript -->
+            </div>
+        </div>
+
+        <!-- Panel para información de almacenamiento -->
+        <div class="admin-panel" id="storage-info">
+            <h2>Información de Almacenamiento</h2>
+            
+            <div class="storage-info">
+                <p><strong>Estrategia de almacenamiento:</strong> Todas las herramientas y evaluaciones se almacenan en el localStorage del navegador.</p>
+                <p><strong>Ventajas:</strong> Los datos persisten entre sesiones y no requieren servidor externo.</p>
+                <p><strong>Limitaciones:</strong> El almacenamiento está limitado a aproximadamente 5MB por dominio.</p>
+            </div>
+
+            <div class="storage-stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="toolsCount">0</div>
+                    <div class="stat-label">Herramientas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="quizCount">0</div>
+                    <div class="stat-label">Evaluaciones</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="storageUsage">0 KB</div>
+                    <div class="stat-label">Espacio usado</div>
+                </div>
+            </div>
+
+            <!-- Barra de progreso del almacenamiento -->
+            <div class="progress-container">
+                <div class="progress-bar" id="storageProgressBar" style="width: 0%"></div>
+            </div>
+            <div class="progress-info">
+                <span id="storageUsed">0 KB</span>
+                <span id="storageLimit">5 MB</span>
+            </div>
+
+            <!-- Mensaje de advertencia si se está usando mucho espacio -->
+            <div id="storageWarning" class="storage-warning" style="display: none;">
+                <i class="fas fa-exclamation-triangle"></i> 
+                <strong>Advertencia:</strong> Está utilizando más del 80% del espacio disponible. Considere eliminar algunos elementos para liberar espacio.
+            </div>
+
+            <div class="storage-actions">
+                <button class="btn" id="clearDataBtn" style="background-color: #f44336; margin-top: 15px;">
+                    <i class="fas fa-trash"></i> Limpiar todos los datos
+                </button>
+                <div id="clearMessage" class="message" style="margin-top: 10px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuración de límites
+        const MAX_IMAGE_SIZE = 500 * 1024; // 500KB en bytes
+        const MAX_STORAGE_SIZE = 5 * 1024 * 1024; // 5MB en bytes
+
+        // Verificar si el administrador ha iniciado sesión
+        if (!localStorage.getItem('adminLoggedIn')) {
+            window.location.href = 'admin-login.html';
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar la aplicación
+            initializeApp();
+            
+            // Cargar herramientas existentes
+            loadTools();
+            
+            // Cargar evaluaciones existentes
+            loadQuiz();
+            
+            // Actualizar información de almacenamiento
+            updateStorageInfo();
+        });
+
+        function initializeApp() {
+            // Navegación entre paneles
+            const navLinks = document.querySelectorAll('.nav-link');
+            const panels = document.querySelectorAll('.admin-panel');
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Remover clase active de todos los enlaces
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    // Agregar clase active al enlace clickeado
+                    this.classList.add('active');
+                    
+                    // Ocultar todos los paneles
+                    panels.forEach(panel => panel.classList.remove('active'));
+                    // Mostrar el panel correspondiente
+                    const target = this.getAttribute('data-target');
+                    document.getElementById(target).classList.add('active');
+                    
+                    // Si es el panel de gestión, cargar los datos
+                    if (target === 'manage-tools') {
+                        loadTools();
+                    }
+                    
+                    if (target === 'manage-quiz') {
+                        loadQuiz();
+                    }
+                    
+                    if (target === 'storage-info') {
+                        updateStorageInfo();
+                    }
+                });
+            });
+            
+            // Vista previa de imagen para herramientas con validación de tamaño
+            document.getElementById('toolImage').addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                const imageSizeMessage = document.getElementById('imageSizeMessage');
+                
+                if (file) {
+                    // Validar tamaño de la imagen
+                    if (file.size > MAX_IMAGE_SIZE) {
+                        imageSizeMessage.textContent = `La imagen es demasiado grande (${(file.size / 1024).toFixed(2)}KB). El tamaño máximo permitido es 500KB.`;
+                        imageSizeMessage.className = 'message error';
+                        imageSizeMessage.style.display = 'block';
+                        this.value = ''; // Limpiar el input
+                        document.getElementById('toolImagePreview').style.display = 'none';
+                        return;
+                    }
+                    
+                    // Validar tipo de archivo
+                    const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+                    if (!validTypes.includes(file.type)) {
+                        imageSizeMessage.textContent = 'Formato de imagen no válido. Use JPG, PNG o GIF.';
+                        imageSizeMessage.className = 'message error';
+                        imageSizeMessage.style.display = 'block';
+                        this.value = ''; // Limpiar el input
+                        document.getElementById('toolImagePreview').style.display = 'none';
+                        return;
+                    }
+                    
+                    // Ocultar mensaje de error si existe
+                    imageSizeMessage.style.display = 'none';
+                    
+                    // Mostrar vista previa
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const preview = document.getElementById('toolImagePreview');
+                        preview.src = event.target.result;
+                        preview.style.display = 'block';
+                        
+                        // Mostrar mensaje de éxito
+                        imageSizeMessage.textContent = `Imagen válida. Tamaño: ${(file.size / 1024).toFixed(2)}KB`;
+                        imageSizeMessage.className = 'message success';
+                        imageSizeMessage.style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            // Funcionalidad para agregar características
+            document.getElementById('addCharacteristicBtn').addEventListener('click', function() {
+                const container = document.getElementById('characteristicsContainer');
+                const newItem = document.createElement('div');
+                newItem.className = 'characteristic-item';
+                newItem.innerHTML = `
+                    <input type="text" placeholder="Característica" class="characteristic-input">
+                    <button type="button" class="remove-btn">-</button>
+                `;
+                container.appendChild(newItem);
+                
+                // Agregar evento al botón de eliminar
+                newItem.querySelector('.remove-btn').addEventListener('click', function() {
+                    container.removeChild(newItem);
+                });
+            });
+            
+            // Funcionalidad para agregar opciones de respuesta
+            document.getElementById('addOptionBtn').addEventListener('click', function() {
+                const container = document.getElementById('optionsContainer');
+                const newItem = document.createElement('div');
+                newItem.className = 'option-item';
+                newItem.innerHTML = `
+                    <input type="text" placeholder="Opción de respuesta" class="option-input">
+                    <div class="correct-checkbox">
+                        <input type="checkbox" class="correct-option">
+                        <label>Correcta</label>
+                    </div>
+                    <button type="button" class="remove-btn">-</button>
+                `;
+                container.appendChild(newItem);
+                
+                // Agregar evento al botón de eliminar
+                newItem.querySelector('.remove-btn').addEventListener('click', function() {
+                    container.removeChild(newItem);
+                });
+            });
+            
+            // Inicializar botones de eliminar existentes
+            function initRemoveButtons() {
+                document.querySelectorAll('.remove-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        this.parentElement.remove();
+                    });
+                });
+            }
+            initRemoveButtons();
+            
+            // Guardar nueva herramienta
+            document.getElementById('toolForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const nombre = document.getElementById('toolName').value;
+                const id = document.getElementById('toolId').value.toLowerCase().replace(/\s+/g, '');
+                const descripcion = document.getElementById('toolDescription').value;
+                const usos = document.getElementById('toolUses').value;
+                const imagenInput = document.getElementById('toolImage');
+                
+                // Validar que se haya seleccionado una imagen
+                if (imagenInput.files.length === 0) {
+                    showMessage('toolMessage', 'error', 'Debe seleccionar una imagen.');
+                    return;
+                }
+                
+                // Validar tamaño de imagen
+                const file = imagenInput.files[0];
+                if (file.size > MAX_IMAGE_SIZE) {
+                    showMessage('toolMessage', 'error', `La imagen es demasiado grande (${(file.size / 1024).toFixed(2)}KB). El tamaño máximo permitido es 500KB.`);
+                    return;
+                }
+                
+                // Verificar espacio disponible en almacenamiento
+                if (!checkStorageSpace()) {
+                    showMessage('toolMessage', 'error', 'No hay suficiente espacio disponible. Elimine algunas herramientas o evaluaciones para liberar espacio.');
+                    return;
+                }
+                
+                // Obtener características
+                const caracteristicas = [];
+                document.querySelectorAll('.characteristic-input').forEach(input => {
+                    if (input.value.trim() !== '') {
+                        caracteristicas.push(input.value.trim());
+                    }
+                });
+                
+                // Validar que haya al menos una característica
+                if (caracteristicas.length === 0) {
+                    showMessage('toolMessage', 'error', 'Debe agregar al menos una característica.');
+                    return;
+                }
+                
+                // Obtener herramientas existentes
+                const herramientas = JSON.parse(localStorage.getItem('herramientas')) || [];
+                
+                // Verificar si el ID ya existe
+                if (herramientas.some(herramienta => herramienta.id === id)) {
+                    showMessage('toolMessage', 'error', 'Ya existe una herramienta con ese ID.');
+                    return;
+                }
+                
+                try {
+                    // Leer la imagen como Base64
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(event) {
+                        const imageBase64 = event.target.result;
+                        
+                        // Agregar nueva herramienta
+                        herramientas.push({
+                            id: id,
+                            nombre: nombre,
+                            imagen: imageBase64,
+                            descripcion: descripcion,
+                            caracteristicas: caracteristicas,
+                            usos: usos
+                        });
+                        
+                        // Guardar en localStorage
+                        localStorage.setItem('herramientas', JSON.stringify(herramientas));
+                        
+                        // Mostrar mensaje de éxito
+                        showMessage('toolMessage', 'success', 'Herramienta agregada correctamente.');
+                        
+                        // Limpiar formulario
+                        document.getElementById('toolForm').reset();
+                        document.getElementById('toolImagePreview').style.display = 'none';
+                        document.getElementById('imageSizeMessage').style.display = 'none';
+                        
+                        // Restablecer características
+                        document.getElementById('characteristicsContainer').innerHTML = `
+                            <div class="characteristic-item">
+                                <input type="text" placeholder="Característica" class="characteristic-input">
+                                <button type="button" class="remove-btn">-</button>
+                            </div>
+                        `;
+                        
+                        // Reinicializar botones de eliminar
+                        initRemoveButtons();
+                        
+                        // Actualizar información de almacenamiento
+                        updateStorageInfo();
+                    };
+                    
+                    reader.readAsDataURL(file);
+                    
+                } catch (error) {
+                    console.error('Error al guardar herramienta:', error);
+                    showMessage('toolMessage', 'error', 'Error al guardar la herramienta: ' + error.message);
+                }
+            });
+            
+            // Guardar nueva evaluación
+            document.getElementById('quizForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const pregunta = document.getElementById('quizQuestion').value;
+                const opcionesInputs = document.querySelectorAll('.option-input');
+                const opcionesCorrectas = document.querySelectorAll('.correct-option');
+                
+                // Validar que haya al menos 2 opciones
+                if (opcionesInputs.length < 2) {
+                    showMessage('quizMessage', 'error', 'Debe agregar al menos 2 opciones de respuesta.');
+                    return;
+                }
+                
+                // Verificar espacio disponible en almacenamiento
+                if (!checkStorageSpace()) {
+                    showMessage('quizMessage', 'error', 'No hay suficiente espacio disponible. Elimine algunas herramientas o evaluaciones para liberar espacio.');
+                    return;
+                }
+                
+                // Obtener opciones
+                const opciones = [];
+                
+                opcionesInputs.forEach((input, index) => {
+                    if (input.value.trim() !== '') {
+                        opciones.push({
+                            texto: input.value.trim(),
+                            correcta: opcionesCorrectas[index].checked
+                        });
+                    }
+                });
+                
+                // Validar que haya al menos 2 opciones válidas
+                if (opciones.length < 2) {
+                    showMessage('quizMessage', 'error', 'Debe agregar al menos 2 opciones de respuesta válidas.');
+                    return;
+                }
+                
+                // Validar que se haya seleccionado al menos una opción correcta
+                const tieneCorrecta = opciones.some(opcion => opcion.correcta);
+                if (!tieneCorrecta) {
+                    showMessage('quizMessage', 'error', 'Debe seleccionar al menos una opción correcta.');
+                    return;
+                }
+                
+                // Obtener evaluaciones existentes
+                const evaluaciones = JSON.parse(localStorage.getItem('evaluaciones')) || [];
+                
+                // Generar ID único
+                const nuevoId = Date.now();
+                
+                // Agregar nueva evaluación
+                evaluaciones.push({
+                    id: nuevoId,
+                    pregunta: pregunta,
+                    opciones: opciones
+                });
+                
+                // Guardar en localStorage
+                localStorage.setItem('evaluaciones', JSON.stringify(evaluaciones));
+                
+                // Mostrar mensaje de éxito
+                showMessage('quizMessage', 'success', 'Evaluación agregada correctamente.');
+                
+                // Limpiar formulario
+                document.getElementById('quizForm').reset();
+                
+                // Restablecer opciones
+                document.getElementById('optionsContainer').innerHTML = `
+                    <div class="option-item">
+                        <input type="text" placeholder="Opción de respuesta" class="option-input">
+                        <div class="correct-checkbox">
+                            <input type="checkbox" class="correct-option">
+                            <label>Correcta</label>
+                        </div>
+                        <button type="button" class="remove-btn">-</button>
+                    </div>
+                    <div class="option-item">
+                        <input type="text" placeholder="Opción de respuesta" class="option-input">
+                        <div class="correct-checkbox">
+                            <input type="checkbox" class="correct-option">
+                            <label>Correcta</label>
+                        </div>
+                        <button type="button" class="remove-btn">-</button>
+                    </div>
+                `;
+                
+                // Reinicializar botones de eliminar
+                initRemoveButtons();
+                
+                // Actualizar información de almacenamiento
+                updateStorageInfo();
+            });
+            
+            // Función para mostrar mensajes
+            function showMessage(elementId, type, text) {
+                const messageElement = document.getElementById(elementId);
+                messageElement.textContent = text;
+                messageElement.className = `message ${type}`;
+                messageElement.style.display = 'block';
+                
+                // Ocultar mensaje después de 5 segundos
+                setTimeout(() => {
+                    messageElement.style.display = 'none';
+                }, 5000);
+            }
+            
+            // Inicializar el almacenamiento si no existe
+            function initializeStorage() {
+                if (!localStorage.getItem('herramientas')) {
+                    localStorage.setItem('herramientas', JSON.stringify([]));
+                }
+                if (!localStorage.getItem('evaluaciones')) {
+                    localStorage.setItem('evaluaciones', JSON.stringify([]));
+                }
+            }
+            initializeStorage();
+            
+            // Cerrar sesión
+            document.getElementById('logoutBtn').addEventListener('click', function() {
+                localStorage.removeItem('adminLoggedIn');
+                window.location.href = 'index.html';
+            });
+            
+            // Botón para limpiar datos
+            document.getElementById('clearDataBtn').addEventListener('click', function() {
+                if (confirm('¿Está seguro de que desea eliminar TODOS los datos? Esta acción no se puede deshacer.')) {
+                    localStorage.removeItem('herramientas');
+                    localStorage.removeItem('evaluaciones');
+                    
+                    // Reinicializar almacenamiento
+                    initializeStorage();
+                    
+                    // Actualizar información
+                    updateStorageInfo();
+                    loadTools();
+                    loadQuiz();
+                    
+                    // Mostrar mensaje
+                    const clearMessage = document.getElementById('clearMessage');
+                    clearMessage.textContent = 'Todos los datos han sido eliminados correctamente.';
+                    clearMessage.className = 'message success';
+                    clearMessage.style.display = 'block';
+                    
+                    setTimeout(() => {
+                        clearMessage.style.display = 'none';
+                    }, 5000);
+                }
+            });
+        }
+        
+        // Función para verificar espacio disponible en almacenamiento
+        function checkStorageSpace() {
+            // Calcular solo el espacio usado por nuestras aplicaciones
+            const herramientas = localStorage.getItem('herramientas') || '[]';
+            const evaluaciones = localStorage.getItem('evaluaciones') || '[]';
+            const adminLoggedIn = localStorage.getItem('adminLoggedIn') || '';
+            
+            let totalBytes = 0;
+            totalBytes += herramientas.length * 2; // Cada carácter son 2 bytes en UTF-16
+            totalBytes += evaluaciones.length * 2;
+            totalBytes += adminLoggedIn.length * 2;
+            
+            // Dejar un margen de seguridad (100KB)
+            return totalBytes < (MAX_STORAGE_SIZE - 100 * 1024);
+        }
+        
+        // Función para cargar herramientas en el panel de gestión
+        function loadTools() {
+            const toolsList = document.getElementById('toolsList');
+            toolsList.innerHTML = '';
+            
+            // Obtener herramientas del localStorage
+            const herramientas = JSON.parse(localStorage.getItem('herramientas')) || [];
+            
+            if (herramientas.length === 0) {
+                toolsList.innerHTML = '<p>No hay herramientas registradas.</p>';
+                return;
+            }
+            
+            herramientas.forEach(herramienta => {
+                const toolCard = document.createElement('div');
+                toolCard.className = 'tool-card';
+                
+                toolCard.innerHTML = `
+                    <img src="${herramienta.imagen}" alt="${herramienta.nombre}" onerror="this.src='https://via.placeholder.com/300x150?text=Imagen+no+disponible'">
+                    <div class="tool-card-content">
+                        <h3>${herramienta.nombre}</h3>
+                        <p><strong>ID:</strong> ${herramienta.id}</p>
+                        <p><strong>Descripción:</strong> ${herramienta.descripcion.substring(0, 100)}...</p>
+                        <button class="btn" onclick="deleteTool('${herramienta.id}')" style="margin-top: 10px;">Eliminar</button>
+                    </div>
+                `;
+                toolsList.appendChild(toolCard);
+            });
+        }
+        
+        // Función para cargar evaluaciones en el panel de gestión
+        function loadQuiz() {
+            const quizList = document.getElementById('quizList');
+            quizList.innerHTML = '';
+            
+            // Obtener evaluaciones del localStorage
+            const evaluaciones = JSON.parse(localStorage.getItem('evaluaciones')) || [];
+            
+            if (evaluaciones.length === 0) {
+                quizList.innerHTML = '<p>No hay evaluaciones registradas.</p>';
+                return;
+            }
+            
+            evaluaciones.forEach(evaluacion => {
+                const quizCard = document.createElement('div');
+                quizCard.className = 'quiz-card';
+                
+                // Contar opciones correctas
+                const opcionesCorrectas = evaluacion.opciones.filter(opcion => opcion.correcta);
+                
+                quizCard.innerHTML = `
+                    <div class="quiz-card-content">
+                        <h3>Pregunta #${evaluacion.id}</h3>
+                        <p><strong>Pregunta:</strong> ${evaluacion.pregunta}</p>
+                        <p><strong>Respuestas correctas:</strong> ${opcionesCorrectas.length}</p>
+                        <p><strong>Total opciones:</strong> ${evaluacion.opciones.length}</p>
+                        <button class="btn" onclick="deleteQuiz(${evaluacion.id})" style="margin-top: 10px;">Eliminar</button>
+                    </div>
+                `;
+                quizList.appendChild(quizCard);
+            });
+        }
+        
+        // Función para actualizar información de almacenamiento - CORREGIDA
+        function updateStorageInfo() {
+            // Obtener datos
+            const herramientas = JSON.parse(localStorage.getItem('herramientas')) || [];
+            const evaluaciones = JSON.parse(localStorage.getItem('evaluaciones')) || [];
+            
+            // Actualizar contadores
+            document.getElementById('toolsCount').textContent = herramientas.length;
+            document.getElementById('quizCount').textContent = evaluaciones.length;
+            
+            // Calcular uso de almacenamiento SOLO de nuestras aplicaciones
+            const herramientasData = localStorage.getItem('herramientas') || '[]';
+            const evaluacionesData = localStorage.getItem('evaluaciones') || '[]';
+            const adminLoggedIn = localStorage.getItem('adminLoggedIn') || '';
+            
+            let totalBytes = 0;
+            totalBytes += herramientasData.length * 2; // Cada carácter son 2 bytes en UTF-16
+            totalBytes += evaluacionesData.length * 2;
+            totalBytes += adminLoggedIn.length * 2;
+            
+            const usageKB = (totalBytes / 1024).toFixed(2);
+            const usageMB = (totalBytes / (1024 * 1024)).toFixed(2);
+            
+            document.getElementById('storageUsage').textContent = `${usageKB} KB`;
+            document.getElementById('storageUsed').textContent = `${usageKB} KB`;
+            
+            // Actualizar barra de progreso
+            const progressPercentage = (totalBytes / MAX_STORAGE_SIZE) * 100;
+            document.getElementById('storageProgressBar').style.width = `${Math.min(progressPercentage, 100)}%`;
+            
+            // Cambiar color de la barra según el uso
+            if (progressPercentage > 80) {
+                document.getElementById('storageProgressBar').style.backgroundColor = '#f44336';
+                document.getElementById('storageWarning').style.display = 'block';
+            } else if (progressPercentage > 60) {
+                document.getElementById('storageProgressBar').style.backgroundColor = '#ff9800';
+                document.getElementById('storageWarning').style.display = 'none';
+            } else {
+                document.getElementById('storageProgressBar').style.backgroundColor = '#4caf50';
+                document.getElementById('storageWarning').style.display = 'none';
+            }
+        }
+        
+        // Función para eliminar herramienta (disponible globalmente)
+        function deleteTool(toolId) {
+            if (confirm('¿Está seguro de que desea eliminar esta herramienta?')) {
+                // Eliminar herramienta del almacenamiento
+                const herramientas = JSON.parse(localStorage.getItem('herramientas')) || [];
+                const nuevasHerramientas = herramientas.filter(h => h.id !== toolId);
+                localStorage.setItem('herramientas', JSON.stringify(nuevasHerramientas));
+                
+                // Recargar la lista
+                loadTools();
+                
+                // Actualizar información de almacenamiento
+                updateStorageInfo();
+                
+                alert('Herramienta eliminada correctamente.');
+            }
+        }
+        
+        // Función para eliminar evaluación (disponible globalmente)
+        function deleteQuiz(quizId) {
+            if (confirm('¿Está seguro de que desea eliminar esta evaluación?')) {
+                // Eliminar evaluación del almacenamiento
+                const evaluaciones = JSON.parse(localStorage.getItem('evaluaciones')) || [];
+                const nuevasEvaluaciones = evaluaciones.filter(e => e.id !== quizId);
+                localStorage.setItem('evaluaciones', JSON.stringify(nuevasEvaluaciones));
+                
+                // Recargar la lista
+                loadQuiz();
+                
+                // Actualizar información de almacenamiento
+                updateStorageInfo();
+                
+                alert('Evaluación eliminada correctamente.');
+            }
+        }
+    </script>
+</body>
+</html>
